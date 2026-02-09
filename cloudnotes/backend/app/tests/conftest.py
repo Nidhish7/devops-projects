@@ -4,6 +4,7 @@ import pytest
 from app.db.base import Base
 from app.db.session import engine
 
+import app.models.note
 
 @pytest.fixture(scope="session", autouse=True)
 def create_test_db():
