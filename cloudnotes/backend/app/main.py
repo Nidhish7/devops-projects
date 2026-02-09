@@ -13,9 +13,10 @@ app.include_router(notes.router)
 
 
 @app.on_event("startup")
-async def on_startup():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+async def on_startup():    
+    if settings.env == "test":
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
 
 
 @app.get("/health")
