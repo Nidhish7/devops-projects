@@ -4,14 +4,17 @@ on:
     push:
         paths:
             -   "cloudnotes/**"
+            -   ".github/workflows/**"
     pull_request:
         paths:
             - "cloudnotes/**"
+            -   ".github/workflows/**"
+
 
 jobs:
     backend-tests:
         runs-on: ubuntu-latest
-        
+
         env:
             DATABASE_URL: sqlite+aiosqlite:///./test.db
             REDIS_URL: redis://localhost:6379
