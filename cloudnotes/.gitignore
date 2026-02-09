@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+*.pyc
+.env
+bash.exe.stackdump
+node_modules/

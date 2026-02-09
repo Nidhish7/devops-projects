@@ -1,0 +1,45 @@
+# version: "3.9"
+
+services:
+  backend:
+    build: ./backend
+    image: cloudnotes-backend
+#    container_name: cloudnotes-backend
+    env_file:
+      - backend/.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+ #   volumes:
+ #     - ./backend/app  :/app/app
+    restart: unless-stopped
+
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: cloudnotes-postgres
+    environment:
+      POSTGRES_USER: cloudnotes
+      POSTGRES_PASSWORD: cloudnotes
+      POSTGRES_DB: cloudnotes
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  
+  redis:
+    image: redis:7-alpine
+    container_name: cloudnotes-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
