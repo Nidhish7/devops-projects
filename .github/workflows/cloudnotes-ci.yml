@@ -70,3 +70,29 @@ jobs:
 
                     docker push $IMAGE:${{ github.sha }}
                     docker push $IMAGE:latest
+
+    deploy-dev:
+        runs-on: ubuntu-latest
+        needs: docker-build
+
+        steps:
+            -   name: Checkout repo
+                uses: actions/checkout@v4
+            
+            -   name: Install Kubectl
+                uses: azure/setup-kubectl@v4
+
+            -   name: Configure Kubeconfig
+                run: |
+                    mkdir -p ~/.kube
+                    echo "${{ secrets.KUBECONFIG_DEV }}" > ~/.kube/config
+
+            -   name: Deploy backend to dev cluster
+                run: |
+                    IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/cloudnotes-backend:${{ github.sha }}
+                    
+                    kubectl set image deployment/backend \
+                        backend=$IMAGE \
+                        -n cloudnotes-dev
+
+                    kubectl rollout status deployment/backend -n cloudnotes-dev
